@@ -25,10 +25,9 @@ class InvoiceQueryServiceIT {
         Invoice invoice = InvoiceTestDataBuilder.anInvoice().build();
         invoice.changePaymentSettings(PaymentMethod.GATEWAY_BALANCE, null);
         invoiceRepository.saveAndFlush(invoice);
+        InvoiceOutput invoiceOutput = invoiceQueryService.findByOrderId(invoice.getOrderId());
 
-        InvoiceOutout invoiceOutout = invoiceQueryService.findByOrderId(invoice.getOrderId());
-
-        Assertions.assertThat(invoiceOutout.getId()).isEqualTo(invoice.getId());
+        Assertions.assertThat(invoiceOutput.getId()).isEqualTo(invoice.getId());
     }
 
 }

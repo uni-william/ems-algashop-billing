@@ -9,24 +9,19 @@ import java.util.Objects;
 
 @Getter
 @Setter(AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class Payer {
     private String fullName;
     private String document;
     private String phone;
     private String email;
-
     @Embedded
     private Address address;
 
     @Builder
-    public Payer(String fullName,
-                 String document,
-                 String phone,
-                 String email,
-                 Address address) {
+    public Payer(String fullName, String document, String phone, String email, Address address) {
         FieldValidations.requiresNonBlank(fullName);
         FieldValidations.requiresNonBlank(document);
         FieldValidations.requiresNonBlank(phone);

@@ -17,5 +17,5 @@ public class GenerateInvoiceInput{
     private UUID customerId;
     private PaymentSettingsInput paymentSettings;
     private PayerData payer;
-    private Set items;
+    private Set<LineItemInput> items;
 }

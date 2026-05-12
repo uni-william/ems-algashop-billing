@@ -27,7 +27,6 @@ public class CreditCard {
     private String brand;
     private Integer expMonth;
     private Integer expYear;
-
     private String gatewayCode;
 
     public static CreditCard brandNew(UUID customerId,
@@ -44,8 +43,6 @@ public class CreditCard {
             throw new IllegalArgumentException();
         }
 
-
-
         return new CreditCard(
                 IdGenerator.generateTimeBasedUUID(),
                 OffsetDateTime.now(),
@@ -55,9 +52,7 @@ public class CreditCard {
                 expMonth,
                 expYear,
                 gatewayCreditCardCode
-
         );
-
     }
 
     public void setGatewayCode(String gatewayCode) {

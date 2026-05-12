@@ -13,6 +13,4 @@ public class InvoiceCanceledEvent {
     private UUID customerId;
     private String orderId;
     private OffsetDateTime canceledAt;
-
-
 }

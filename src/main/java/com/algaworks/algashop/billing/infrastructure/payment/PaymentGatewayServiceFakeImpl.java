@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Service
 public class PaymentGatewayServiceFakeImpl implements PaymentGatewayService {
+
     @Override
     public Payment capture(PaymentRequest request) {
         return Payment.builder()

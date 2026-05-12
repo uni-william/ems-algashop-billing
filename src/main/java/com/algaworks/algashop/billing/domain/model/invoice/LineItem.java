@@ -26,9 +26,11 @@ public class LineItem {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException();
         }
+
         if (number <= 0) {
             throw new IllegalArgumentException();
         }
+
         this.number = number;
         this.name = name;
         this.amount = amount;

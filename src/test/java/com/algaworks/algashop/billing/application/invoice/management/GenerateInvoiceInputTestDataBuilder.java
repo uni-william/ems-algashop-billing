@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 import java.util.UUID;
 
-public class GenerateInvoiceInputTestDataBuilder{
+public class GenerateInvoiceInputTestDataBuilder {
     public static GenerateInvoiceInput.GenerateInvoiceInputBuilder anInput() {
         return GenerateInvoiceInput.builder()
                 .orderId("123ABC")
@@ -34,5 +34,4 @@ public class GenerateInvoiceInputTestDataBuilder{
                         .amount(new BigDecimal("200.00"))
                         .build()));
     }
-
 }

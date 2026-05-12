@@ -23,7 +23,7 @@ class InvoiceTest {
                 i -> Assertions.assertThat(i.getPaidAt()).isNotNull()
         );
     }
-
+    
     @Test
     public void shouldCancelInvoiceWithReason() {
         Invoice invoice = InvoiceTestDataBuilder.anInvoice().build();
@@ -37,7 +37,7 @@ class InvoiceTest {
                 i -> Assertions.assertThat(i.getCancelReason()).isEqualTo(cancelReason)
         );
     }
-
+    
     @Test
     public void shouldIssueInvoiceCorrectly() {
         String orderId = "123";
@@ -66,9 +66,9 @@ class InvoiceTest {
         Set<LineItem> emptyItems = new HashSet<>();
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> Invoice.issue("01226N0693HDA23",
-                        UUID.randomUUID(),
-                        InvoiceTestDataBuilder.aPayer(),
-                        emptyItems));
+	                UUID.randomUUID(), 
+		              InvoiceTestDataBuilder.aPayer(), 
+		              emptyItems));
     }
 
     @Test
@@ -89,7 +89,7 @@ class InvoiceTest {
                 .isThrownBy(() -> invoice.changePaymentSettings(PaymentMethod.CREDIT_CARD, UUID.randomUUID()));
     }
 
-
+    
 
     @Test
     public void shouldThrowExceptionWhenMarkingCanceledInvoiceAsPaid() {

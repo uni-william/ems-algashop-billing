@@ -68,12 +68,11 @@ class InvoiceManagementApplicationServiceIT {
 
         Assertions.assertThat(invoice.getVersion()).isEqualTo(0L);
         Assertions.assertThat(invoice.getCreatedAt()).isNotNull();
-        Assertions.assertThat(invoice.getCreateByUserId()).isNotNull();
-
+        Assertions.assertThat(invoice.getCreatedByUserId()).isNotNull();
 
         Mockito.verify(invoicingService).issue(any(), any(), any(), any());
 
-        Mockito.verify(invoiceEventListener).listen(Mockito.any(InvoiceIssueEvent.class));
+        Mockito.verify(invoiceEventListener).listen(Mockito.any(InvoiceIssuedEvent.class));
     }
 
     @Test
@@ -104,13 +103,12 @@ class InvoiceManagementApplicationServiceIT {
         invoiceRepository.saveAndFlush(invoice);
 
         Payment payment = Payment.builder()
-                .gatewayCode("1234")
+                .gatewayCode("12345")
                 .invoiceId(invoice.getId())
                 .method(invoice.getPaymentSettings().getMethod())
                 .status(PaymentStatus.PAID)
                 .build();
-
-        Mockito.when(paymentGatewayService.capture(any(PaymentRequest.class))).thenReturn(payment);
+        Mockito.when(paymentGatewayService.capture(Mockito.any(PaymentRequest.class))).thenReturn(payment);
 
         applicationService.processPayment(invoice.getId());
 
@@ -122,7 +120,6 @@ class InvoiceManagementApplicationServiceIT {
         Mockito.verify(invoicingService).assignPayment(Mockito.any(Invoice.class), Mockito.any(Payment.class));
 
         Mockito.verify(invoiceEventListener).listen(Mockito.any(InvoicePaidEvent.class));
-
     }
 
     @Test
@@ -132,13 +129,13 @@ class InvoiceManagementApplicationServiceIT {
         invoiceRepository.saveAndFlush(invoice);
 
         Payment payment = Payment.builder()
-                .gatewayCode("1234")
+                .gatewayCode("12345")
                 .invoiceId(invoice.getId())
                 .method(invoice.getPaymentSettings().getMethod())
                 .status(PaymentStatus.FAILED)
                 .build();
 
-        Mockito.when(paymentGatewayService.capture(any(PaymentRequest.class))).thenReturn(payment);
+        Mockito.when(paymentGatewayService.capture(Mockito.any(PaymentRequest.class))).thenReturn(payment);
 
         applicationService.processPayment(invoice.getId());
 
@@ -150,7 +147,6 @@ class InvoiceManagementApplicationServiceIT {
         Mockito.verify(invoicingService).assignPayment(Mockito.any(Invoice.class), Mockito.any(Payment.class));
 
         Mockito.verify(invoiceEventListener).listen(Mockito.any(InvoiceCanceledEvent.class));
-
     }
 
 }

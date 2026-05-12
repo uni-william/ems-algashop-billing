@@ -20,17 +20,18 @@ public abstract class AbstractAuditableAggregateRoot<T extends AbstractAggregate
         extends AbstractAggregateRoot<T> {
 
     @CreatedBy
-    protected UUID createByUserId;
+    protected UUID createdByUserId;
 
     @CreatedDate
     protected OffsetDateTime createdAt;
 
     @LastModifiedBy
-    protected  UUID lastModifiedByUserId;
+    protected UUID lastModifiedByUserId;
 
     @LastModifiedDate
     protected OffsetDateTime lastModifiedDate;
 
     @Version
     protected long version;
+
 }

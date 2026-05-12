@@ -13,6 +13,4 @@ public class InvoicePaidEvent {
     private UUID customerId;
     private String orderId;
     private OffsetDateTime paidAt;
-
-
 }

@@ -18,10 +18,8 @@ public class Payment {
     private PaymentMethod method;
     private PaymentStatus status;
 
-    public Payment(String gatewayCode,
-                   UUID invoiceId,
-                   PaymentMethod method,
-                   PaymentStatus status) {
+    public Payment(String gatewayCode, UUID invoiceId,
+                   PaymentMethod method, PaymentStatus status) {
         FieldValidations.requiresNonBlank(gatewayCode);
         Objects.requireNonNull(invoiceId);
         Objects.requireNonNull(method);

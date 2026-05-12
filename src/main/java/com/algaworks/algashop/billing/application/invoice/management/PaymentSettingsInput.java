@@ -13,6 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentSettingsInput {
-    private PaymentMethod method;
-    private UUID creditCardId;
+	private PaymentMethod method;
+	private UUID creditCardId;
 }

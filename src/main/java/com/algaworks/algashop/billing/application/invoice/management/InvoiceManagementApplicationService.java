@@ -37,13 +37,15 @@ public class InvoiceManagementApplicationService {
         invoice.changePaymentSettings(paymentSettings.getMethod(), paymentSettings.getCreditCardId());
 
         invoiceRepository.saveAndFlush(invoice);
-        return invoice.getId();
 
+        return invoice.getId();
     }
+
     @Transactional
     public void processPayment(UUID invoiceId) {
-        Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(InvoiceNotFoundException::new);
-        PaymentRequest paymentRequest= toPaymentRequest(invoice);
+        Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> new InvoiceNotFoundException());
+        PaymentRequest paymentRequest = toPaymentRequest(invoice);
+
         Payment payment;
         try {
             payment = paymentGatewayService.capture(paymentRequest);
@@ -85,6 +87,7 @@ public class InvoiceManagementApplicationService {
 
     private Payer convertToPayer(PayerData payerData) {
         AddressData addressData = payerData.getAddress();
+
         return Payer.builder()
                 .fullName(payerData.getFullName())
                 .email(payerData.getEmail())
@@ -104,8 +107,7 @@ public class InvoiceManagementApplicationService {
 
     private void verifyCreditCardId(UUID creditCardId) {
         if (creditCardId != null && !creditCardRepository.existsById(creditCardId)) {
-            throw  new CreditCardNotFoundException();
+            throw new CreditCardNotFoundException();
         }
-
     }
 }

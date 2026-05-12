@@ -1,7 +1,7 @@
 package com.algaworks.algashop.billing.infrastructure.listener;
 
 import com.algaworks.algashop.billing.domain.model.invoice.InvoiceCanceledEvent;
-import com.algaworks.algashop.billing.domain.model.invoice.InvoiceIssueEvent;
+import com.algaworks.algashop.billing.domain.model.invoice.InvoiceIssuedEvent;
 import com.algaworks.algashop.billing.domain.model.invoice.InvoicePaidEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -10,12 +10,7 @@ import org.springframework.stereotype.Component;
 public class InvoiceEventListener {
 
     @EventListener
-    public void listen(InvoiceIssueEvent event) {
-
-    }
-
-    @EventListener
-    public void listen(InvoicePaidEvent event) {
+    public void listen(InvoiceIssuedEvent event) {
 
     }
 
@@ -24,5 +19,9 @@ public class InvoiceEventListener {
 
     }
 
+    @EventListener
+    public void listen(InvoicePaidEvent event) {
+
+    }
 
 }

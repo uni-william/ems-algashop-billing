@@ -19,8 +19,8 @@ import java.util.*;
 @Entity
 public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
 
-    @EqualsAndHashCode.Include
     @Id
+    @EqualsAndHashCode.Include
     private UUID id;
     private String orderId;
     private UUID customerId;
@@ -52,21 +52,21 @@ public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
                                 UUID customerId,
                                 Payer payer,
                                 Set<LineItem> items) {
-
         Objects.requireNonNull(customerId);
         Objects.requireNonNull(payer);
         Objects.requireNonNull(items);
 
         if (StringUtils.isBlank(orderId)) {
-            throw new IllegalArgumentException("Order id cannot be blank");
+            throw new IllegalArgumentException();
         }
 
         if (items.isEmpty()) {
-            throw  new IllegalArgumentException("Items cannot be empty");
+            throw new IllegalArgumentException();
         }
 
+        BigDecimal totalAmount = items.stream().map(LineItem::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal totalAmount = items.stream().map(LineItem::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         Invoice invoice = new Invoice(
                 IdGenerator.generateTimeBasedUUID(),
                 orderId,
@@ -82,8 +82,8 @@ public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
                 payer,
                 null
         );
-        invoice.registerEvent(new InvoiceIssueEvent(invoice.getId(), invoice.getCustomerId(),
-                invoice.getOrderId(), invoice.getIssuedAt()));
+        invoice.registerEvent(new InvoiceIssuedEvent(invoice.getId(),
+                invoice.getCustomerId(), invoice.getOrderId(), invoice.getIssuedAt()));
         return invoice;
     }
 
@@ -103,16 +103,14 @@ public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
         return InvoiceStatus.PAID.equals(this.getStatus());
     }
 
-
     public void markAsPaid() {
         if (!isUnpaid()) {
-            throw  new DomainException(String.format("Invoice %s with status %s cannot be marked as paid",
+            throw new DomainException(String.format("Invoice %s with status %s cannot be marked as paid",
                     this.getId(), this.getStatus().toString().toLowerCase()));
         }
         setPaidAt(OffsetDateTime.now());
         setStatus(InvoiceStatus.PAID);
-        this.registerEvent(new InvoicePaidEvent(this.getId(), this.getCustomerId(),
-                this.getOrderId(), this.getPaidAt()));
+        registerEvent(new InvoicePaidEvent(this.getId(), this.getCustomerId(), this.getOrderId(), this.getPaidAt()));
     }
 
     public void cancel(String cancelReason) {
@@ -122,8 +120,7 @@ public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
         setCancelReason(cancelReason);
         setCanceledAt(OffsetDateTime.now());
         setStatus(InvoiceStatus.CANCELED);
-        this.registerEvent(new InvoiceCanceledEvent(this.getId(), this.getCustomerId(),
-                this.getOrderId(), this.getCanceledAt()));
+        registerEvent(new InvoiceCanceledEvent(this.getId(), this.getCustomerId(), this.getOrderId(), this.getCanceledAt()));
     }
 
     public void assignPaymentGatewayCode(String code) {
@@ -134,15 +131,13 @@ public class Invoice extends AbstractAuditableAggregateRoot<Invoice> {
         this.getPaymentSettings().assignGatewayCode(code);
     }
 
-    public void changePaymentSettings(PaymentMethod method, UUID crediCardId) {
+    public void changePaymentSettings(PaymentMethod method, UUID creditCardId) {
         if (!isUnpaid()) {
             throw new DomainException(String.format("Invoice %s with status %s cannot be edited",
                     this.getId(), this.getStatus().toString().toLowerCase()));
         }
-        PaymentSettings paySettings = PaymentSettings.brandNew(method, crediCardId);
-        paySettings.setInvoice(this);
-        this.setPaymentSettings(paySettings);
+        PaymentSettings paymentSettings = PaymentSettings.brandNew(method, creditCardId);
+        paymentSettings.setInvoice(this);
+        this.setPaymentSettings(paymentSettings);
     }
-
-
 }

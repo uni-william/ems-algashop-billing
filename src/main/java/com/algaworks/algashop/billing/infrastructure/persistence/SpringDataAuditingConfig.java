@@ -27,4 +27,5 @@ public class SpringDataAuditingConfig {
     public AuditorAware<UUID> auditorProvider() {
         return () -> Optional.of(UUID.randomUUID());
     }
+
 }

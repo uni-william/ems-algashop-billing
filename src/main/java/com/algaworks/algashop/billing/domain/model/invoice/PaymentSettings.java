@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
-
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,14 +31,14 @@ public class PaymentSettings {
     @Setter(AccessLevel.PACKAGE)
     private Invoice invoice;
 
-    static PaymentSettings brandNew(PaymentMethod method, UUID crediCardId) {
+    static PaymentSettings brandNew(PaymentMethod method, UUID creditCardId) {
         Objects.requireNonNull(method);
         if (method.equals(PaymentMethod.CREDIT_CARD)) {
-            Objects.requireNonNull(crediCardId);
+            Objects.requireNonNull(creditCardId);
         }
         return new PaymentSettings(
                 IdGenerator.generateTimeBasedUUID(),
-                crediCardId,
+                creditCardId,
                 null,
                 method,
                 null
@@ -48,7 +47,7 @@ public class PaymentSettings {
 
     void assignGatewayCode(String gatewayCode) {
         if (StringUtils.isBlank(gatewayCode)) {
-            throw new IllegalArgumentException("Gateway code cannot be blank");
+            throw new IllegalArgumentException();
         }
         if (this.getGatewayCode() != null) {
             throw new DomainException("Gateway code already assigned");
