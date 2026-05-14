@@ -46,11 +46,10 @@ class InvoiceManagementApplicationServiceIT {
 
     @Test
     public void shouldGenerateInvoiceWithCreditCardAsPayment() {
-        UUID customerId = UUID.randomUUID();
         CreditCard creditCard = CreditCardTestDataBuilder.aCreditCard().build();
-        creditCardRepository.saveAndFlush(creditCard);
+        creditCard = creditCardRepository.saveAndFlush(creditCard);
 
-        GenerateInvoiceInput input = GenerateInvoiceInputTestDataBuilder.anInput().build();
+        GenerateInvoiceInput input = GenerateInvoiceInputTestDataBuilder.anInput().customerId(creditCard.getCustomerId()).build();
 
         input.setPaymentSettings(
                 PaymentSettingsInput.builder()
