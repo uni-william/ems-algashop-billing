@@ -2,6 +2,8 @@ spring:
   datasource:
     url: jdbc:postgresql://algashop-postgres:5432/billing
   jpa:
+    hibernate:
+      ddl-auto: none
     show-sql: true
   flyway:
     locations: classpath:db/migration
