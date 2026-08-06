@@ -4,7 +4,6 @@ import com.algaworks.algashop.billing.application.invoice.management.GenerateInv
 import com.algaworks.algashop.billing.application.invoice.management.InvoiceManagementApplicationService;
 import com.algaworks.algashop.billing.application.invoice.query.InvoiceOutput;
 import com.algaworks.algashop.billing.application.invoice.query.InvoiceQueryService;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 import static com.algaworks.algashop.billing.infrastructure.security.SecurityAnnotations.*;
-
 
 @RestController
 @RequestMapping("/api/v1/orders/{orderId}/invoice")
@@ -27,7 +25,7 @@ public class InvoiceController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @CanWriteInvoices
+    @CanGenerateInvoices
     public InvoiceOutput generate(@PathVariable String orderId, @Valid @RequestBody GenerateInvoiceInput input) {
         input.setOrderId(orderId);
         UUID invoiceId = invoiceManagementApplicationService.generate(input);
@@ -36,13 +34,12 @@ public class InvoiceController {
         } catch (Exception e) {
             log.error(String.format("Error when processing payment for invoice %s", invoiceId), e);
         }
-
         return invoiceQueryService.findByOrderId(orderId);
     }
 
     @GetMapping
     @CanReadInvoices
-    public InvoiceOutput findBuOrder(@PathVariable String orderId) {
+    public InvoiceOutput findByOrder(@PathVariable String orderId) {
         return invoiceQueryService.findByOrderId(orderId);
     }
 
